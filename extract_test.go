@@ -5,7 +5,6 @@ import (
 )
 
 // TestHighestLevelMap tests input whose highest level is a map.
-
 func TestHighestLevelMap(t *testing.T) {
     const jsonBlob = `
 {
@@ -190,4 +189,48 @@ const jsonBlob = `
     }
 }
 
+
+// TestDeepEmbedded
+func TestDeepEmbedded(t *testing.T) {
+    const jsonBlob = `
+{
+"this":[    18, false, "Smaug",
+            {
+        "fijg": 3,
+                "reason": "invalid_parameter",
+                "name": "group_tag_name",
+        "capybara": [
+            {
+                "fig": 2.718,
+                "sloth": true,
+                "burrow": null,
+                "squirrel": [2, 3, 4],
+                "velociraptor": "fossil",
+                "vole": [
+                    {
+                        "hello": "Sauron",
+                        "mouse": "abababab",
+                        "avocado": [11, 12, 0],
+                        "ie": [
+                            {
+                                "lol": "Mordred",    
+                                "message": "ice giant",
+                                "afkg": 20                          
+                            }
+                        ]
+                    }                   
+                ]
+            }
+        ]
+            }
+]
+}`
+
+    want := "ice giant"
+
+    got := extractErrorFromJSON(jsonBlob)
+    if got.Error() != want {
+        t.Errorf("Want: %q \nGot: %q", want, got)
+    }
+}
 
