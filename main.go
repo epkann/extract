@@ -30,23 +30,19 @@ func main() {
 }
 
 func extractErrorFromJSON(s string) error {
-
 	var f interface{}
 	err := json.Unmarshal([]byte(s), &f)
 	if err != nil {
 		return err
 	}
 
-	var e string
-	e = checkSliceOrMap(f)
-	if e != "" {
+	if e := checkSliceOrMap(f); e != "" {
 		return errors.New(e)
 	}
 	return errors.New("unknown error")
 }
 
 func checkSliceOrMap(f interface{}) string {
-
 	if mmap, ok := f.(map[string]interface{}); ok {
 		// Go through all keys first to find the highest-level error.
 		for k, v := range mmap {
@@ -66,10 +62,12 @@ func checkSliceOrMap(f interface{}) string {
 			}
 			if _, ok := v.([]interface{}); ok {
 				s := checkSliceOrMap(v)
-				return s
+				if s!= "" {
+					return s
+				}
+				continue
 			}
 		}
-		return "" // if no error message found and no values are maps or slices, return empty string ""
 	}
 
 	if slice, ok := f.([]interface{}); ok {
@@ -83,7 +81,6 @@ func checkSliceOrMap(f interface{}) string {
 				return s
 			}
 		}
-		return "" // if no elements are slices or maps, return empty string ""
 	}
 	return ""
 }
