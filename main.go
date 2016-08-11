@@ -58,7 +58,10 @@ func checkSliceOrMap(f interface{}) string {
 		for _, v := range mmap {
 			if _, ok := v.(map[string]interface{}); ok {
 				s := checkSliceOrMap(v)
-				return s
+				if s!= "" {
+						return s
+				}
+				continue
 			}
 			if _, ok := v.([]interface{}); ok {
 				s := checkSliceOrMap(v)
@@ -74,11 +77,17 @@ func checkSliceOrMap(f interface{}) string {
 		for _, v := range slice {
 			if _, ok := v.(map[string]interface{}); ok {
 				s := checkSliceOrMap(v)
-				return s
+				if s != "" {
+						return s
+				}
+				continue
 			}
 			if _, ok := v.([]interface{}); ok {
 				s := checkSliceOrMap(v)
-				return s
+					if s!= "" {
+						return s
+					}
+				continue
 			}
 		}
 	}
